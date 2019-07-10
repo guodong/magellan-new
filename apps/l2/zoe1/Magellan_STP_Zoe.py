@@ -37,7 +37,7 @@ def build_port():
 def init_STPTable():
      Store.STPTable = [[ [] for i in range(len(Store.switches))] for _ in range(len(Store.switches))]
      for i in  Store.links:
-        p1=(i.leftnode,i.rightnode)#现在使用一个二元组表示一个port
+        p1=(i.leftnode,i.rightnode)
         p2=(i.rightnode,i.leftnode)
         Store.STPTable[TR(i.leftnode)][TR(i.rightnode)].append(p1)
         Store.STPTable[TR(i.rightnode)][TR(i.leftnode)].append(p2)
@@ -74,8 +74,8 @@ def dijk(src):
         for i in listdst:   
             if(Store.linkTable[TR(src)][TR(listpre[-1])]+Store.linkTable[TR(listpre[-1])][TR(i)]<linkLine[TR(i)]):
                 linkLine[TR(i)]=Store.linkTable[TR(src)][TR(listpre[-1])]+Store.linkTable[TR(listpre[-1])][TR(i)]
-                Store.STPTable[TR(src)][TR(i)].clear()
-                Store.STPTable[TR(src)][TR(i)].extend( Store.STPTable[TR(src)][TR(listpre[-1])])##append有错https://blog.csdn.net/m0_37738114/article/details/88319232
+                Store.STPTable[TR(src)][TR(i)][:] = []
+                Store.STPTable[TR(src)][TR(i)].extend( Store.STPTable[TR(src)][TR(listpre[-1])])
                 Store.STPTable[TR(src)][TR(i)].extend( Store.STPTable[TR(listpre[-1])][TR(i)])
  
             if(linkLine[TR(i)]<mindistance):

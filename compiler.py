@@ -9,7 +9,7 @@ def compile(file, variables):
     visitor = NodeVisitor(fp)
     with open(file, 'r') as f:
         root = ast.parse(f.read())
-        # print astunparse.dump(root)
+        print astunparse.dump(root)
         visitor.visit(root)
 
         fp.dump()

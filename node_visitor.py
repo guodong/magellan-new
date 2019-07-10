@@ -29,9 +29,9 @@ class NodeVisitor(ast.NodeVisitor):
             self.guardStack.append(gv)
 
             var = self.fp.new_variable()
-            inst = Instruction(self.guardStack[-1], [self.fp.get_variable(node.targets[0].value.id), self.visit(node.targets[0].slice.value)], [var], 'valof')
+            inst = Instruction(self.guardStack[-1], [self.fp.get_variable(node.targets[0].value.id), self.visit(node.targets[0].slice.value)], [var], 'varof')
             self.fp.add_instruction(inst)
-            inst = Instruction(self.guardStack[-1], [self.fp.get_variable(node.value.id)], [var], 'copy')
+            inst = Instruction(self.guardStack[-1], [self.fp.get_variable(node.value.id)], [var], 'assign')
             self.fp.add_instruction(inst)
             self.guardStack.pop()
 
@@ -74,7 +74,7 @@ class NodeVisitor(ast.NodeVisitor):
         var = self.fp.new_variable()
         inst = Instruction(self.guardStack[-1],
                            [self.fp.get_variable(node.value.id), self.visit(node.slice.value)],
-                           [var], 'valof')
+                           [var], 'varof')
         self.fp.add_instruction(inst)
         return var
 
@@ -82,7 +82,11 @@ class NodeVisitor(ast.NodeVisitor):
         ret_val = self.fp.get_variable('return')
         if ret_val is None:
             ret_val = self.fp.new_variable('return')
-        inst = Instruction(self.guardStack[-1], [self.visit(node.value)], [ret_val], 'assign')
+
+        if isinstance(node.value, ast.Subscript):
+            inst = Instruction(self.guardStack[-1], [self.fp.get_variable(node.value.value.id), self.visit(node.value.slice.value)], [ret_val], 'varof')
+        else:
+            inst = Instruction(self.guardStack[-1], [self.visit(node.value)], [ret_val], 'assign')
         self.fp.add_instruction(inst)
 
 
