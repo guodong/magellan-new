@@ -108,9 +108,9 @@ def get_networkstp():
             if(p.id in spset):
                 spset.remove(p.id)
             if(s.id in  StpTreePortDict):
-                 StpTreePortDict[s.id].update({p.id:spset})
+                 StpTreePortDict[s.id].update({p.id:list(spset)})
             else:
-                StpTreePortDict.update({s.id:{p.id:spset}} )   
+                StpTreePortDict.update({s.id:{p.id:list(spset)}} )   
         
     return StpTreePortDict
     
